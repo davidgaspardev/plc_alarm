@@ -2,7 +2,7 @@ extern crate hidapi;
 
 use hidapi::HidApi;
 use hidapi::HidDevice;
-// use std::ffi::{CString};
+use std::ffi::{CString};
 
 pub struct RelayController {
     num: u8,
@@ -51,26 +51,26 @@ impl RelayController {
         }
     }
 
-    // pub fn new_from_path(num: u8, path: String) -> RelayController {
-    //     let hidapi = HidApi::new().unwrap();
-    //     let c_path = CString::new(path).expect("Failed to convert from String to CString");
-    //     let device = hidapi.open_path(&c_path).unwrap();
+    pub fn new_from_path(num: u8, path: String) -> RelayController {
+        let hidapi = HidApi::new().unwrap();
+        let c_path = CString::new(path).expect("Failed to convert from String to CString");
+        let device = hidapi.open_path(&c_path).unwrap();
 
-    //     RelayController {
-    //         num: num,
-    //         device: device
-    //     }
-    // }
+        RelayController {
+            num: num,
+            device: device
+        }
+    }
 
-    // pub fn new_from_ids(num: u8, vid: u16, pid: u16) -> RelayController {
-    //     let hidapi = HidApi::new().unwrap();
-    //     let device = hidapi.open(vid, pid).unwrap();
+    pub fn new_from_ids(num: u8, vid: u16, pid: u16) -> RelayController {
+        let hidapi = HidApi::new().unwrap();
+        let device = hidapi.open(vid, pid).unwrap();
 
-    //     RelayController {
-    //         num: num,
-    //         device: device
-    //     }
-    // }
+        RelayController {
+            num: num,
+            device: device
+        }
+    }
 
     pub fn turn_on(&self) {
         let command = 0xFF;
