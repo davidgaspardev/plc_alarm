@@ -34,7 +34,7 @@ impl RelayController {
 
         hidapi.device_list().into_iter().for_each(| device_info | {
             println!(
-                "Manufacturer: {} {{Vendor ID: Ox{:04x}}} {{Product ID: 0x{:04x}}} {{Path: {}}}",
+                "Manufacturer: {} {{Vendor ID: 0x{:04x}}} {{Product ID: 0x{:04x}}} {{Path: {}}}",
                 device_info.manufacturer_string().unwrap(),
                 device_info.vendor_id(),
                 device_info.product_id(),
