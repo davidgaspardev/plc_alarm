@@ -1,47 +1,20 @@
-extern crate hidapi;
+mod relay;
+mod s7;
 
-use hidapi::HidApi;
-use hidapi::HidDevice;
+use std::thread::sleep;
 use std::time::Duration;
-use std::thread::{sleep};
 
 fn main() {
-    let api = HidApi::new().unwrap();
-    // This is where you would put your device's Vendor ID and Product ID
-    let (vendor_id, product_id) = (0x16c0, 0x05df);
-    let device = api.open(vendor_id, product_id).unwrap();
+    let relay_control = relay::RelayController::new(0);
+    let mut s7_client = s7::S7Client::connect("192.168.0.1".to_string());
 
-    turn_on_alarm(&device, 30);
-}
+    println!("read_dword: {}", s7_client.read_dword(1, 1132));
 
-fn turn_on_alarm(device: &HidDevice, duration_in_seconds: u16) {
-    turn_on_relay(&device, 1);
-    turn_on_relay(&device, 2);
+    loop {
+        s7_client.read_dword(1, 1132);
 
-    sleep(Duration::from_secs(duration_in_seconds.into()));
-
-    turn_off_relay(&device, 1);
-    turn_off_relay(&device, 2);
-}
-
-fn turn_on_relay(device: &HidDevice, relay_num: u8) {
-    let buf = [0x0u8, 0xFF, relay_num];
-
-    let response = device.write(&buf);
-
-    match response {
-        Ok(_) => println!("Turn on relay: {}", relay_num),
-        Err(err) => eprintln!("Failed to turn on err relay: {} - err: {}", relay_num, err),
-    }
-}
-
-fn turn_off_relay(device: &HidDevice, relay_num: u8) {
-    let buf = [0x0u8, 0xFD, relay_num];
-
-    let response = device.write(&buf);
-
-    match response {
-        Ok(_) => println!("Turn on relay: {}", relay_num),
-        Err(err) => eprintln!("Failed to turn on err relay: {} - err: {}", relay_num, err),
+        relay_control.turn_on();
+        sleep(Duration::from_secs(10));
+        relay_control.turn_off();
     }
 }
