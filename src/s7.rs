@@ -53,6 +53,8 @@ impl S7Client {
                 ]);
             },
             Err(err) => {
+                eprintln!("Failed to read dword: {}", err);
+
                 self.reconnect();
                 return self.read_dword(db_num, addr);
             }
@@ -81,6 +83,8 @@ impl S7Client {
                 )
             },
             Err(err) => {
+                eprintln!("Failed to read double dword: {}", err);
+
                 self.reconnect();
                 return self.read_double_dword(db_num, addr);
             }
