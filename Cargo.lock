@@ -3,6 +3,12 @@
 version = 3
 
 [[package]]
+name = "byteorder"
+version = "1.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "14c189c53d098945499cdfa7ecc63567cf3886b3332b312a5b4585d8d3a6a610"
+
+[[package]]
 name = "cc"
 version = "1.0.79"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -37,6 +43,16 @@ name = "plc_alarm"
 version = "0.1.0"
 dependencies = [
  "hidapi",
+ "s7",
+]
+
+[[package]]
+name = "s7"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9af7e99de21ea0d31f503b0bbc4fd23292ff96f0324a9e393679850d33ac881e"
+dependencies = [
+ "byteorder",
 ]
 
 [[package]]
