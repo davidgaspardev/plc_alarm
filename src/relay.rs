@@ -51,6 +51,7 @@ impl RelayController {
         }
     }
 
+    #[warn(dead_code)]
     pub fn new_from_path(num: u8, path: String) -> RelayController {
         let hidapi = HidApi::new().unwrap();
         let c_path = CString::new(path).expect("Failed to convert from String to CString");
@@ -62,6 +63,7 @@ impl RelayController {
         }
     }
 
+    #[warn(dead_code)]
     pub fn new_from_ids(num: u8, vid: u16, pid: u16) -> RelayController {
         let hidapi = HidApi::new().unwrap();
         let device = hidapi.open(vid, pid).unwrap();
