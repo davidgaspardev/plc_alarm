@@ -33,15 +33,17 @@ impl RelayController {
     pub fn new(num: u8) -> RelayController {
         let hidapi = HidApi::new().unwrap();
 
-        hidapi.device_list().into_iter().for_each(| device_info | {
-            println!(
-                "Manufacturer: {} {{Vendor ID: 0x{:04x}}} {{Product ID: 0x{:04x}}} {{Path: {}}}",
-                device_info.manufacturer_string().unwrap(),
-                device_info.vendor_id(),
-                device_info.product_id(),
-                device_info.path().to_str().unwrap()
-            );
-        });
+        if cfg!(debug_assertions) {
+            hidapi.device_list().into_iter().for_each(| device_info | {
+                println!(
+                    "Manufacturer: {} {{Vendor ID: 0x{:04x}}} {{Product ID: 0x{:04x}}} {{Path: {}}}",
+                    device_info.manufacturer_string().unwrap(),
+                    device_info.vendor_id(),
+                    device_info.product_id(),
+                    device_info.path().to_str().unwrap()
+                );
+            });
+        }
 
         let device_info = hidapi.device_list().next().unwrap();
         let device = device_info.open_device(&hidapi).unwrap();
