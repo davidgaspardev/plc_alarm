@@ -15,7 +15,7 @@ impl S7Client {
         let addr_v4 = Ipv4Addr::from_str(&ip).unwrap();
         let addr = IpAddr::from(addr_v4);
 
-        let mut opts = tcp::Options::new(addr, 5, 5, Connection::PG);
+        let mut opts = tcp::Options::new(addr, 0, 1, Connection::PG);
         opts.read_timeout = Duration::from_secs(2);
         opts.write_timeout = Duration::from_secs(2);
 
