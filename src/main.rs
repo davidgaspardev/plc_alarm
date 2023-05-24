@@ -13,7 +13,7 @@ fn main() {
     }
 
     let ip_address = &args[1];
-    let mut s7_client = s7::S7Client::connect(ip_address.to_string());
+    let mut s7_client = s7::S7Client::connect(ip_address.to_string(), 0, 1);
 
     let relay_control = relay::RelayController::new(0);
 

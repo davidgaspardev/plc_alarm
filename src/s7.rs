@@ -11,11 +11,11 @@ pub struct S7Client {
 }
 
 impl S7Client {
-    pub fn connect(ip: String) -> S7Client {
+    pub fn connect(ip: String, rack: u16, slot: u16) -> S7Client {
         let addr_v4 = Ipv4Addr::from_str(&ip).unwrap();
         let addr = IpAddr::from(addr_v4);
 
-        let mut opts = tcp::Options::new(addr, 0, 1, Connection::PG);
+        let mut opts = tcp::Options::new(addr, rack, slot, Connection::PG);
         opts.read_timeout = Duration::from_secs(2);
         opts.write_timeout = Duration::from_secs(2);
 
