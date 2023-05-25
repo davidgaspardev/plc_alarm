@@ -18,19 +18,36 @@ fn main() {
     let relay_control = relay::RelayController::new(0);
 
     loop {
-        let production_speed = s7_client.read_dword(1, 1088);
-        let (diameter_x, diameter_y) = s7_client.read_double_dword(1, 1132);
+        let prod_speed_bytes = s7_client.read_dword(1, 1088);
+        let (dia_x_byte, dia_y_byte) = s7_client.read_double_dword(1, 1132);
+
+        let (
+            prod_speed,
+            dia_x,
+            dia_y
+        ) = (
+            bytes_to_float32(prod_speed_bytes),
+            bytes_to_float32(dia_x_byte),
+            bytes_to_float32(dia_y_byte)
+        );
 
         if cfg!(debug_assertions) {
-            println!("production_speed: {}", production_speed);
-            println!("diameter x: {}", diameter_x);
-            println!("diameter y: {}", diameter_y);
+            println!("[?] Production speed: {:?}", prod_speed);
+            println!("[?] Diameter X: {:?}", dia_x);
+            println!("[?] Diameter Y: {:?}", dia_y);
         }
 
-        if production_speed > 100 && (diameter_x < 2 || diameter_y < 2) {
+        if prod_speed > 10f32 && (dia_x < 1.9 || dia_y < 4.9 || dia_y > 5.05) {
+
+            // Turn on/off relay
             relay_control.turn_on();
             sleep(Duration::from_secs(10));
             relay_control.turn_off();
         }
     }
+}
+
+fn bytes_to_float32(bytes: [u8; 4]) -> f32 {
+    let parsed_hex = u32::from_be_bytes(bytes);
+    f32::from_bits(parsed_hex)
 }
