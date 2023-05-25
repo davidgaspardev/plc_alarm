@@ -39,18 +39,18 @@ impl S7Client {
         self.client = client;
     }
 
-    pub fn read_dword(&mut self, db_num: i32, addr: i32) -> i32 {
+    pub fn read_dword(&mut self, db_num: i32, addr: i32) -> [u8; 4] {
         let mut buffer = vec![0x0u8; 4];
         let result = self.client.ag_read(db_num, addr, 4, &mut buffer);
 
         match result {
             Ok(_) => {
-                return i32::from_le_bytes([
+                return [
                     buffer[0],
                     buffer[1],
                     buffer[2],
                     buffer[3]
-                ]);
+                ];
             },
             Err(err) => {
                 eprintln!("Failed to read dword: {}", err);
@@ -61,25 +61,25 @@ impl S7Client {
         }
     }
 
-    pub fn read_double_dword(&mut self, db_num: i32, addr: i32) -> (i32, i32) {
+    pub fn read_double_dword(&mut self, db_num: i32, addr: i32) -> ([u8; 4], [u8; 4]) {
         let mut buffer = vec![0x0u8; 8];
         let result = self.client.ag_read(db_num, addr, 8, &mut buffer);
 
         match result {
             Ok(_) => {
                 return (
-                    i32::from_le_bytes([
+                    [
                         buffer[0],
                         buffer[1],
                         buffer[2],
                         buffer[3]
-                    ]),
-                    i32::from_le_bytes([
+                    ],
+                    [
                         buffer[4],
                         buffer[5],
                         buffer[6],
                         buffer[7]
-                    ])
+                    ]
                 )
             },
             Err(err) => {
