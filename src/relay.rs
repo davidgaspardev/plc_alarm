@@ -49,8 +49,8 @@ impl RelayController {
         let device = device_info.open_device(&hidapi).unwrap();
 
         RelayController {
-            num: num,
-            device: device
+            num,
+            device
         }
     }
 
@@ -61,8 +61,8 @@ impl RelayController {
         let device = hidapi.open_path(&c_path).unwrap();
 
         RelayController {
-            num: num,
-            device: device
+            num,
+            device
         }
     }
 
@@ -72,8 +72,8 @@ impl RelayController {
         let device = hidapi.open(vid, pid).unwrap();
 
         RelayController {
-            num: num,
-            device: device
+            num,
+            device
         }
     }
 
