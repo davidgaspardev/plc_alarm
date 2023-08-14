@@ -6,18 +6,21 @@ service_path=/etc/systemd/system/plc_alarm.service
 binary_path=/usr/local/bin/plc_alarm
 working_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+cd $working_directory
+
 # Check if the binary file already exists
 if [ -f $binary_path ]; then
-    read -p "$binary_path already exists. Overwrite? (y/n): " choice
+    read -p "$binary_path already exists. Make a new build? (y/n): " choice
     if [[ $choice != "y" && $choice != "Y" ]]; then
-        echo "Exiting without overwriting."
-        exit 1
+        echo "Continue with build current."
+    else
+        cargo build --release
+        sudo cp -f target/release/plc_alarm $binary_path
     fi
+else
+    cargo build --release
+    sudo cp target/release/plc_alarm $binary_path
 fi
-
-cd $working_directory
-cargo build --release
-sudo cp -f target/release/plc_alarm $binary_path
 
 # Check if the service file already exists
 if [ -f $service_path ]; then
