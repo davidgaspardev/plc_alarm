@@ -37,7 +37,7 @@ fn main() {
             println!("[?] Diameter Y: {:?}", dia_y);
         }
 
-        if prod_speed > 10f32 && (dia_x < 1.9 || dia_y < 4.9 || dia_y > 5.05) {
+        if prod_speed > 30f32 && (dia_x < 2 || dia_x > 2.15 || dia_y < 4.95 || dia_y > 5.15) {
 
             // Turn on/off relay
             relay_control.turn_on();
