@@ -18,7 +18,7 @@ fn main() {
 
     let relay_control = relay::RelayController::new(0);
 
-    println!("production speed,diameter X,diameter Y,date");
+    println!("\"production speed\",\"diameter X\",\"diameter Y\",\"date\"");
 
     loop {
         let prod_speed_bytes = s7_client.read_dword(1, 1088);
