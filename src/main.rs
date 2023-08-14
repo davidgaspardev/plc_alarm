@@ -4,6 +4,7 @@ mod s7;
 use std::env;
 use std::thread::sleep;
 use std::time::Duration;
+use std::time::SystemTime;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -16,6 +17,8 @@ fn main() {
     let mut s7_client = s7::S7Client::connect(ip_address.to_string(), 0, 1);
 
     let relay_control = relay::RelayController::new(0);
+
+    println!("production speed,diameter X,diameter Y,date");
 
     loop {
         let prod_speed_bytes = s7_client.read_dword(1, 1088);
@@ -38,6 +41,10 @@ fn main() {
         }
 
         if prod_speed > 30.0 && (dia_x < 2.0 || dia_x > 2.15 || dia_y < 4.95 || dia_y > 5.15) {
+            // Convert to UNIX timestamp (seconds since 1970-01-01 00:00:00)
+            if let Ok(now) = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)  {
+                println!("{},{},{},{}", prod_speed, dia_x, dia_y, now.as_secs());
+            }
 
             // Turn on/off relay
             relay_control.turn_on();
