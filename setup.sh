@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Check if libudev-dev is installed
+dpkg -l | grep libudev-dev &> /dev/null
+
+if [ $? -eq 0 ]; then
+    echo "libudev-dev is already installed."
+else
+    echo "libudev-dev is not installed. Installing now..."
+    sudo apt update
+    sudo apt install -y libudev-dev
+fi
+
 read -p "Enter PLC ip to listener: " plc_address
 
 service_path=/etc/systemd/system/plc_alarm.service
