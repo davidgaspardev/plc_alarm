@@ -31,8 +31,7 @@ if [ -f $TIMER_PATH ]; then
 fi
 
 # Create the service file content
-cat <<EOL | sudo tee $SERVICE_PATH
-[Unit]
+cat <<EOL | sudo tee $TIMER_PATH
 [Unit]
 Description=Run trimfile.service every hour
 
