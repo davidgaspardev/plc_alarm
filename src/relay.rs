@@ -37,15 +37,18 @@ impl RelayController {
             hidapi.device_list().into_iter().for_each(| device_info | {
                 println!(
                     "Manufacturer: {} {{Vendor ID: 0x{:04x}}} {{Product ID: 0x{:04x}}} {{Path: {}}}",
-                    match device_info.manufacturer_string() {\
+                    match device_info.manufacturer_string() {
                         Some(manufacturer_string) => manufacturer_string,
                         None => "non-manufacturer"
                     },
                     device_info.vendor_id(),
                     device_info.product_id(),
                     match device_info.path().to_str() {
-                        Some(path) => path,
-                        None => "non-path"
+                        Ok(path) => path,
+                        Err(err) => {
+                            eprintln!("{:?}", err);
+                            "non-path"
+                        }
                     }
                 );
             });
