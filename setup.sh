@@ -39,14 +39,14 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=$binary_path $plc_address
+ExecStart=/bin/bash -c '$binary_path $plc_address >> $working_directory/output.csv 2>> $working_directory/error.log'
 Restart=always
 User=root
 Group=root
 Environment=PATH=/usr/bin:/usr/local/bin
 WorkingDirectory=$working_directory
-StandardOutput=append:$working_directory/output.log
-StandardError=append:$working_directory/error.log
+# StandardOutput=file:$working_directory/output.csv
+# StandardError=file:$working_directory/error.log
 RestartSec=3
 LimitNOFILE=4096
 
