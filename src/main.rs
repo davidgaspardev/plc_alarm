@@ -20,16 +20,21 @@ fn main() {
 
     println!("\"production speed\",\"diameter X\",\"diameter Y\",\"date\"");
 
-    loop {
-        let prod_speed_bytes = s7_client.read_dword(1, 1088);
-        let (dia_x_byte, dia_y_byte) = s7_client.read_double_dword(1, 1132);
+    let mut index: u32 = 0;
+    let mut prod_speed_bytes = s7_client.read_dword(1, 1088);
+    let mut prod_speed = bytes_to_float32(prod_speed_bytes);
 
+    loop {
+        if (index % 32) == 0 {
+            prod_speed_bytes = s7_client.read_dword(1, 1088);
+            prod_speed = bytes_to_float32(prod_speed_bytes);
+        }
+
+        let (dia_x_byte, dia_y_byte) = s7_client.read_double_dword(1, 1132);
         let (
-            prod_speed,
             dia_x,
             dia_y
         ) = (
-            bytes_to_float32(prod_speed_bytes),
             bytes_to_float32(dia_x_byte),
             bytes_to_float32(dia_y_byte)
         );
@@ -50,6 +55,12 @@ fn main() {
             relay_control.turn_on();
             sleep(Duration::from_secs(10));
             relay_control.turn_off();
+        }
+
+        if index == u32::MAX {
+            index = 0;
+        } else {
+            index += 1;
         }
     }
 }
