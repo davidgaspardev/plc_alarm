@@ -4,9 +4,9 @@
 dpkg -l | grep libudev-dev &> /dev/null
 
 if [ $? -eq 0 ]; then
-    echo "libudev-dev is already installed."
+    echo "[ INFO ] libudev-dev is already installed."
 else
-    echo "libudev-dev is not installed. Installing now..."
+    echo "[ WARN ] libudev-dev is not installed. Installing now..."
     sudo apt update
     sudo apt install -y libudev-dev
 fi
@@ -20,28 +20,30 @@ cd $WORK_DIR
 
 # Check if the binary file already exists
 if [ -f $BINARY_PATH ]; then
-    read -p "$BINARY_PATH already exists. Make a new build? (y/n): " choice
+    read -p "[ WARN ] $BINARY_PATH already exists. Make a new build? (y/n): " choice
     if [[ $choice != "y" && $choice != "Y" ]]; then
-        echo "Continue with build current."
+        echo "[ INFO ] Continue with build current."
     else
+        echo "[ INFO ] Building new version"
         cargo build --release
         sudo cp -f target/release/plc_alarm $BINARY_PATH
     fi
 else
+    echo "[ INFO ] Building at $BINARY_PATH"
     cargo build --release
     sudo cp target/release/plc_alarm $BINARY_PATH
 fi
 
 # Check if the service file already exists
 if [ -f $SERVICE_PATH ]; then
-    read -p "$SERVICE_PATH already exists. Overwrite? (y/n): " choice
+    read -p "[ WARN ] $SERVICE_PATH already exists. Overwrite? (y/n): " choice
     if [[ $choice != "y" && $choice != "Y" ]]; then
-        echo "Exiting without overwriting."
+        echo "[ INFO ] Exiting without overwriting."
         exit 1
     fi
 fi
 
-read -p "Enter PLC ip to listener: " PLC_ADDRESS
+read -p "[ OK ] Enter PLC ip to listener: " PLC_ADDRESS
 
 # Create the service file content
 cat <<EOL | sudo tee $SERVICE_PATH
@@ -72,4 +74,4 @@ touch $WORK_DIR/error.log
 # Reload systemd
 sudo systemctl daemon-reload
 
-echo "Service file created and systemd reloaded."
+echo "[ OK ] Service file created and systemd reloaded."
