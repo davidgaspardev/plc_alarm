@@ -27,8 +27,8 @@ impl S7Client {
         S7Client {
             addr,
             client,
-            dword_buffer: vec![0x0u8, 4],
-            double_dword_buffer: vec![0x0u8, 8]
+            dword_buffer: vec![0x0u8; 4],
+            double_dword_buffer: vec![0x0u8; 8]
         }
     }
 
