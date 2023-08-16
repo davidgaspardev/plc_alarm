@@ -30,6 +30,10 @@ fn main() {
             prod_speed = bytes_to_float32(prod_speed_bytes);
         }
 
+        if prod_speed <= 30.0 {
+            continue;
+        }
+
         let (dia_x_byte, dia_y_byte) = s7_client.read_double_dword(1, 1132);
         let (
             dia_x,
